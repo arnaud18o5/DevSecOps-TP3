@@ -173,7 +173,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 23.0.3
           docker_layer_caching: true
       - run:
           name: Build and Push Docker Image to GHCR (GitHub Container Registry)
@@ -273,7 +272,7 @@ workflows:
                 - /^release\/.*/
       - deploy-ssh-production:
           requires:
-              - hold
+            - hold
           filters:
             branches:
               only:
