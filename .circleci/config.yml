@@ -157,6 +157,23 @@ jobs:
             sudo service php-fpm restart
             EOF
 
+  deploy-ssh-production:
+    executor: simple-executor
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "${PRODUCTION_SSH_FINGERPRINT}"
+      - deploy:
+          name: Deploy to AWS
+          command: |
+            set -x
+            ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
+            PHP_FPM_VERSION=$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
+            cd $PRODUCTION_DEPLOY_DIRECTORY
+            git pull origin $CIRCLE_BRANCH
+            composer install --optimize-autoloader --no-interaction --prefer-dist
+            (flock -w 10 9 || exit 1; sudo -S service php${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
+            EOF
 # Configuration des workflows
 workflows:
   main_workflow:
@@ -173,6 +190,9 @@ workflows:
       - test-phpunit:
           requires:
             - build-setup
-      - deploy-ssh-staging:
+      # - deploy-ssh-staging:
+      #     requires:
+      #       - test-phpunit
+      - deploy-ssh-production:
           requires:
             - test-phpunit
