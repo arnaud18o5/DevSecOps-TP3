@@ -63,24 +63,34 @@ jobs:
           key: v1-dependencies-{{ checksum "composer.json" }}
       - *persist_to_workspace
 
-  build-infisical:
-    executor: php-executor
-    steps:
-      - checkout
-      - run:
-          name: Install Infisical CLI
-          command: |
-            curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash | sudo apt-get install -y infisical
-      - run:
-          name: Pull secrets from Infisical
-          command: |
-            infisical pull -m $INFISICAL_MACHINE_ID -s $INFISICAL_MACHINE_SECRET -e production
-      - run:
-          name: Use Secret for Testing
-          command: |
-            echo "The PASSWORD_TEST is: $PASSWORD_TEST"
+    build-infisical:
+      executor: php-executor
+      steps:
+        - checkout
+        - run:
+            name: Install Infisical CLI
+            command: |
+              # Installer Infisical en utilisant curl
+              curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash
+              sudo apt-get update && sudo apt-get install -y infisical
+        - run:
+            name: Pull secrets from Infisical
+            command: |
+              infisical pull -m $INFISICAL_MACHINE_ID -s $INFISICAL_MACHINE_SECRET -e production
+        - run:
+            name: Display Secret (for testing purposes only)
+            command: |
+              # Display the secret just to verify it has been pulled correctly
+              echo "The PASSWORD_TEST is: $PASSWORD_TEST"
+        - run:
+            name: Use the PASSWORD_TEST in a Command
+            command: |
+              # Use the secret in a command, for example, connecting to a database
+              echo "Connecting to the database with PASSWORD_TEST..."
+              some_database_command --password=$PASSWORD_TEST
+    
 
-  lint-phpcs:
+    lint-phpcs:
     executor: php-executor
     steps:
       - *attach_workspace
