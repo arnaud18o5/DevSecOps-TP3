@@ -115,23 +115,20 @@ jobs:
             command: |
               curl -L https://infisical.com/install.sh | bash
         - run:
-            name: Pull secrets from Infisical
-            command: |
-              infisical pull -m $INFISICAL_MACHINE_ID -s $INFISICAL_MACHINE_SECRET -e production
-        - restore_cache:
-            keys:
-              - v1-dependencies-{{ checksum "composer.json" }}
-              - v1-dependencies-
+          name: Pull secrets from Infisical
+          command: |
+            infisical pull -m $INFISICAL_MACHINE_ID -s $INFISICAL_MACHINE_SECRET -e production
         - run:
-            name: Install dependencies
-            command: composer install --no-interaction --no-ansi --prefer-dist
-        - save_cache:
-            paths:
-              - ./vendor
-            key: v1-dependencies-{{ checksum "composer.json" }}
-        - persist_to_workspace:
-            root: .
-            paths:
+            name: Display Secret (for testing purposes only)
+            command: |
+              # Display the secret just to verify it has been pulled correctly
+              echo "The PASSWORD_TEST is: $PASSWORD_TEST"
+        - run:
+            name: Use the PASSWORD_TEST in a Command
+            command: |
+              # Use the secret in a command, for example, connecting to a database
+              echo "Connecting to the database with PASSWORD_TEST..."
+              some_database_command --password=$PASSWORD_TEST
 
 
   lint-phpcs:
