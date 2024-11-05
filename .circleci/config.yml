@@ -159,6 +159,7 @@ jobs:
             sudo service php-fpm restart
             EOF
 
+# TODO : ici faut remplacer le composer install par des wget des binaires directement
   deploy-ssh-production:
     executor: simple-executor
     steps:
@@ -170,9 +171,8 @@ jobs:
           command: |
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
-            echo "Test 1"
+            cd /home/ubuntu && mkdir test
             PHP_FPM_VERSION=$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
-            echo "Test 2"
             cd $PRODUCTION_DEPLOY_DIRECTORY
             git pull origin $CIRCLE_BRANCH
             composer install --optimize-autoloader --no-interaction --prefer-dist
