@@ -83,12 +83,6 @@ jobs:
           command: |
             # Display the secret just to verify it has been pulled correctly
             echo "The PASSWORD_TEST is: $PASSWORD_TEST"
-      - run:
-          name: Use the PASSWORD_TEST in a Command
-          command: |
-            # Use the secret in a command, for example, connecting to a database
-            echo "Connecting to the database with PASSWORD_TEST..."
-            some_database_command --password=$PASSWORD_TEST
   
 
   lint-phpcs:
