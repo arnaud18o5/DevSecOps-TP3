@@ -106,6 +106,33 @@ jobs:
           key: v1-dependencies-{{ checksum "composer.json" }}
       - *persist_to_workspace
 
+    build-infisical:
+      executor: php-executor
+      steps:
+        - checkout
+        - run:
+            name: Install Infisical CLI
+            command: |
+              curl -L https://infisical.com/install.sh | bash
+        - run:
+            name: Pull secrets from Infisical
+            command: |
+              infisical pull -m $INFISICAL_MACHINE_ID -s $INFISICAL_MACHINE_SECRET -e production
+        - restore_cache:
+            keys:
+              - v1-dependencies-{{ checksum "composer.json" }}
+              - v1-dependencies-
+        - run:
+            name: Install dependencies
+            command: composer install --no-interaction --no-ansi --prefer-dist
+        - save_cache:
+            paths:
+              - ./vendor
+            key: v1-dependencies-{{ checksum "composer.json" }}
+        - persist_to_workspace:
+            root: .
+            paths:
+
 
   lint-phpcs:
     executor: php-executor
@@ -253,6 +280,7 @@ workflows:
     jobs:
       - debug-info
       - build-setup
+      - build-infisical
       - lint-phpcs:
           requires:
             - build-setup
