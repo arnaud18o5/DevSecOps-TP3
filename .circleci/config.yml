@@ -76,7 +76,8 @@ jobs:
       - run:
           name: Pull secrets from Infisical
           command: |
-            infisical pull -m $INFISICAL_MACHINE_ID -s $INFISICAL_MACHINE_SECRET -e production
+            export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id=$INFISICAL_CLIENT_ID --client-secret=$INFISICAL_CLIENT_SECRET --silent --plain)
+            infisical secrets --projectId=$INFISICAL_PROJECT_ID --env=dev --recursive
       - run:
           name: Display Secret (for testing purposes only)
           command: |
