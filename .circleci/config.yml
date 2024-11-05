@@ -171,7 +171,6 @@ jobs:
           command: |
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
-            cd /home/ubuntu && mkdir test
             PHP_FPM_VERSION=$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
             cd $PRODUCTION_DEPLOY_DIRECTORY
             git pull origin $CIRCLE_BRANCH
