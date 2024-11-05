@@ -65,7 +65,7 @@ executors:
     resource_class: small
     shell: /bin/bash
     docker:
-      - image: cimg/base:stable
+      - image: cimg/php:8.2
         name: localhost
 
 
