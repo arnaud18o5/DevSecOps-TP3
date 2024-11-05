@@ -150,7 +150,7 @@ jobs:
       - run:
           name: Deploy to Staging
           command: |
-            ssh -o StrictHostKeyChecking=no $STAGING_SSH_USER@$STAGING_SSH_HOST << EOF
+            ssh -o StrictHostKeyChecking=no $STAGING_SSH_USER@$STAGING_SSH_HOST \<< EOF
             cd $STAGING_DEPLOY_DIRECTORY
             git pull origin $CIRCLE_BRANCH
             composer install --no-interaction --prefer-dist
