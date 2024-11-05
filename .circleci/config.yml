@@ -23,7 +23,7 @@ executors:
 
 # Configuration des jobs
 jobs:
-  build-setup:
+  debug-info:
     executor: php-executor
     steps:
       - checkout
