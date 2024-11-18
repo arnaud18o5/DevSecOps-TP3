@@ -63,12 +63,12 @@ DIRECTORY_CONFIG="<Directory /home/ubuntu/prod/public>
 </Directory>"
 
 # Vérifier si la section <Directory> existe déjà
-if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONFIG_FILE"; then
+if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONF"; then
     # Ajouter la configuration dans le fichier Apache
-    echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONFIG_FILE" > /dev/null
-    echo "Configuration <Directory /home/ubuntu/prod/public> ajoutée à $APACHE_CONFIG_FILE"
+    echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONF" > /dev/null
+    echo "Configuration <Directory /home/ubuntu/prod/public> ajoutée à $APACHE_CONF"
 else
-    echo "La configuration <Directory /home/ubuntu/prod/public> est déjà présente dans $APACHE_CONFIG_FILE"
+    echo "La configuration <Directory /home/ubuntu/prod/public> est déjà présente dans $APACHE_CONF"
 fi
 
 # Permissions
