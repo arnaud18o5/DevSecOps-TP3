@@ -38,8 +38,8 @@ fi
 cd ~
 if ! [ -d prod ]; then
     git clone https://github.com/arnaud18o5/DevSecOps-TP3.git
-    mv DevSecOps-TP3/ prod
-    cd prod/
+    mv DevSecOps-TP3/ prod_git
+    cd prod_git/
     git config pull.rebase false  # merge
 fi
 
