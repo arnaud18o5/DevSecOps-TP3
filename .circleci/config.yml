@@ -87,9 +87,7 @@ jobs:
           name: Export secrets into env file
           command: |
             # Export the secrets into a .env file
-            export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id=$INFISICAL_CLIENT_ID --client-secret=$INFISICAL_CLIENT_SECRET --silent --plain)
-            infisical init --projectId=$INFISICAL_PROJECT_ID
-            infisical export > .env
+            infisical export --projectId=$INFISICAL_PROJECT_ID > .env
   
 
   lint-phpcs:
