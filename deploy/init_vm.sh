@@ -59,6 +59,7 @@ fi
 # Suggestion : should move the website to a separate directory
 # and give the ownership to www-data, so that the user personal
 # files are not accessible by the web server.
+sudo chmod +x /
 sudo chmod +x /home
 sudo chmod +x /home/ubuntu
 sudo chmod +x /home/ubuntu/prod
