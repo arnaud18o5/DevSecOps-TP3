@@ -55,6 +55,17 @@ else
     echo "DocumentRoot $PROJECT_DIR" >> "$APACHE_CONF"
 fi
 
+# Configuration du répertoire
+DIRECTORY_CONFIG="<Directory /home/ubuntu/prod/public>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>"
+
+if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONFIG_FILE"; then
+    echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONFIG_FILE" > /dev/null
+fi
+
 # Permissions
 # Suggestion : should move the website to a separate directory
 # and give the ownership to www-data, so that the user personal
@@ -64,8 +75,8 @@ sudo chmod +x /home
 sudo chmod +x /home/ubuntu
 sudo chmod +x /home/ubuntu/prod
 sudo chmod +x /home/ubuntu/prod/public
-sudo chown -R www-data:www-data "$PROJECT_DIR"
-sudo chmod -R 755 "$PROJECT_DIR"
+sudo chown -R www-data:www-data /home/ubuntu/prod/public
+sudo chmod -R 755 /home/ubuntu/prod/public
 
 # Redémarrage des services
 sudo systemctl restart php${PHP_VERSION}-fpm
