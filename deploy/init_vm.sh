@@ -6,7 +6,7 @@ sudo apt update
 # Installer PHP et les extensions nécessaires
 sudo apt install -y php
 sudo apt install -y php-{cli,curl,mbstring,xml,zip,gd}
-sudo apt install -y php-fpm
+sudo apt install -y php${PHP_VERSION}-fpm
 sudo systemctl restart apache2
 
 # Installer Composer si ce n'est pas déjà fait
@@ -37,5 +37,9 @@ if ! [ -d prod ]; then
     cd prod/
     git config pull.rebase false  # merge
 fi
+
+# Redémarrer le service php-fpm avec la version correcte
+PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+sudo systemctl restart php${PHP_VERSION}-fpm
 
 echo "Installation terminée avec succès !"
