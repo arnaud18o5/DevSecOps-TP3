@@ -178,7 +178,7 @@ jobs:
             composer install --optimize-autoloader --no-interaction --prefer-dist
             (flock -w 10 9 || exit 1; sudo -S service php${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
             EOF
-# Configuration des workflows
+
 workflows:
   main_workflow:
     jobs:
