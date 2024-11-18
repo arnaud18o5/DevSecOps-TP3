@@ -190,9 +190,16 @@ jobs:
           name: Run PHP Metrics
           command: |
             vendor/bin/phpmetrics --report-html=report.html src/
+      - run:
+          name: Run PHP Mess Detector
+          command: |
+            vendor/bin/phpmd src/ text cleancode,codesize,controversial,design,naming,unusedcode > phpmd-report.txt
       - store_artifacts:
           path: report.html
           destination: phpmetrics-report
+      - store_artifacts:
+          path: phpmd-report.txt
+          destination: phpmd-report
 # Configuration des workflows
 workflows:
   main_workflow:
