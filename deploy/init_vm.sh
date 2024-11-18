@@ -34,10 +34,11 @@ if [ ! -f /usr/local/bin/composer ]; then
     rm composer-setup.php
 fi
 
+DIR_NAME=$1
 # Setup du DocumentRoot d'Apache
 # Variables
 USER_HOME="/home/ubuntu"
-PROJECT_DIR="${USER_HOME}/prod/public"
+PROJECT_DIR="${USER_HOME}/${DIR_NAME}/public"
 APACHE_CONF="/etc/apache2/sites-available/000-default.conf"
 
 if grep -q "DocumentRoot" "$APACHE_CONF"; then
@@ -47,14 +48,14 @@ else
 fi
 
 # Configuration du répertoire
-DIRECTORY_CONFIG="<Directory /home/ubuntu/prod/public>
+DIRECTORY_CONFIG="<Directory /home/ubuntu/${DIR_NAME}/public>
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
 </Directory>"
 
 # Vérifier si la section <Directory> existe déjà
-if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONF"; then
+if ! grep -q "<Directory /home/ubuntu/${DIR_NAME}/public>" "$APACHE_CONF"; then
     echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONF" > /dev/null
 fi
 
