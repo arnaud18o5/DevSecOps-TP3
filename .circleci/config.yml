@@ -163,6 +163,8 @@ jobs:
             EOF
 
 # TODO : ici faut remplacer le composer install par des wget des binaires directement
+
+            # PHP_FPM_VERSION=$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
   deploy-ssh-production:
     executor: simple-executor
     steps:
@@ -180,7 +182,7 @@ jobs:
             ./deploy/init_vm.sh
             chmod -x deploy/init_vm.sh
             composer install --optimize-autoloader --no-interaction --prefer-dist
-            PHP_FPM_VERSION=$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
+            PHP_FPM_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
             echo "php fpm version: $PHP_FPM_VERSION"
             (flock -w 10 9 || exit 1; sudo -S service php${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
             EOF
