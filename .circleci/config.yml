@@ -87,6 +87,7 @@ jobs:
           name: Export secrets into env file
           command: |
             # Export the secrets into a .env file
+            echo "TOKEN INFISICAL = $INFISICAL_TOKEN" > .env
             infisical init
             infisical export > .env
   
