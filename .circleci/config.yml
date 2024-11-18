@@ -180,9 +180,7 @@ jobs:
             cd $PRODUCTION_DEPLOY_DIRECTORY
             sudo git reset --hard origin/$CIRCLE_BRANCH
             git pull origin $CIRCLE_BRANCH
-            chmod +x deploy/init_vm.sh
             sudo ./deploy/init_vm.sh
-            chmod -x deploy/init_vm.sh
             composer install --optimize-autoloader --no-interaction --prefer-dist
             (flock -w 10 9 || exit 1; sudo -S service php8.3-fpm restart ) 9>/tmp/fpm.lock
             EOF
