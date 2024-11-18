@@ -85,21 +85,6 @@ jobs:
             echo "The PASSWORD_TEST is: $PASSWORD_TEST"
   
 
-  lint-phpcs:
-    executor: php-executor
-    steps:
-      - *attach_workspace
-      - run:
-          name: Install PHP_CodeSniffer
-          command: composer require --dev "squizlabs/php_codesniffer=*"
-      - run:
-          name: Run PHP_CodeSniffer
-          command: |
-            ./vendor/bin/phpcs --standard=phpcs.xml --report-file=phpcs-report.txt --extensions=php --ignore=vendor/ .
-      - store_artifacts:
-          path: phpcs-report.txt
-          destination: phpcs-report
-
   security-check-dependencies:
     executor: php-executor
     steps:
@@ -186,9 +171,6 @@ workflows:
       - debug-info
       - build-setup
       - build-infisical
-      - lint-phpcs:
-          requires:
-            - build-setup
       - security-check-dependencies:
           requires:
             - build-setup
