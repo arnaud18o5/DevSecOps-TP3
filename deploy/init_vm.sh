@@ -34,10 +34,6 @@ if [ ! -f /usr/local/bin/composer ]; then
     rm composer-setup.php
 fi
 
-# Configurer le projet git
-cd prod_git
-git config pull.rebase false  # merge
-
 # Setup du DocumentRoot d'Apache
 # Variables
 USER_HOME="/home/ubuntu"
