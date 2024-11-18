@@ -58,16 +58,6 @@ if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONF"; then
     echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONF" > /dev/null
 fi
 
-# Permissions
-# Suggestion : should move the website to a separate directory
-# and give the ownership to www-data, so that the user personal
-# files are not accessible by the web server.
-sudo chmod +x /home
-sudo chmod +x /home/ubuntu
-sudo chmod +x /home/ubuntu/prod
-sudo chown -R www-data:www-data /home/ubuntu/prod/public
-sudo chmod -R 755 /home/ubuntu/prod/public
-
 # Redémarrage des services
 sudo systemctl restart php${PHP_VERSION}-fpm
 sudo systemctl restart apache2
