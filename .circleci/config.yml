@@ -90,6 +90,7 @@ jobs:
             # Export the secrets into a .env file
             export INFISICAL_TOKEN=$(cat infisical_token.txt)
             infisical export --projectId=$INFISICAL_PROJECT_ID --env=dev > .env
+            echo "INFISICAL ENV FILE: $(cat .env)"
   
 
   lint-phpcs:
