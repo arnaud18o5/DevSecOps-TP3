@@ -76,9 +76,9 @@ fi
 # and give the ownership to www-data, so that the user personal
 # files are not accessible by the web server.
 # sudo chmod +x /
-# sudo chmod +x /home
-# sudo chmod +x /home/ubuntu
-# sudo chmod +x /home/ubuntu/prod
+sudo chmod +x /home
+sudo chmod +x /home/ubuntu
+sudo chmod +x /home/ubuntu/prod
 # sudo chmod +x /home/ubuntu/prod/public
 sudo chown -R www-data:www-data /home/ubuntu/prod/public
 sudo chmod -R 755 /home/ubuntu/prod/public
