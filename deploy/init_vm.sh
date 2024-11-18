@@ -43,7 +43,24 @@ if ! [ -d prod ]; then
     git config pull.rebase false  # merge
 fi
 
-# Redémarrer le service php-fpm avec la version correcte
+# Setup du DocumentRoot d'Apache
+# Variables
+USER_HOME="/home/ubuntu"
+PROJECT_DIR="${USER_HOME}/prod/public"
+APACHE_CONF="/etc/apache2/sites-available/000-default.conf"
+
+if grep -q "DocumentRoot" "$APACHE_CONF"; then
+    sed -i "s|DocumentRoot .*|DocumentRoot $PROJECT_DIR|" "$APACHE_CONF"
+else
+    echo "DocumentRoot $PROJECT_DIR" >> "$APACHE_CONF"
+fi
+
+# Permissions
+chown -R www-data:www-data "$PROJECT_DIR"
+chmod -R 755 "$PROJECT_DIR"
+
+# Redémarrage des services
 sudo systemctl restart php${PHP_VERSION}-fpm
+sudo systemctl restart apache2
 
 echo "Installation terminée avec succès !"
