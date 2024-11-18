@@ -9,8 +9,8 @@ sudo apt install -y php-{cli,curl,mbstring,xml,zip,gd}
 
 PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 sudo apt install -y php${PHP_VERSION}-fpm
-sudo systemctl start php8.2-fpm
-sudo systemctl enable php8.2-fpm
+sudo systemctl start php${PHP_VERSION}-fpm
+sudo systemctl enable php${PHP_VERSION}-fpm
 
 sudo systemctl restart apache2
 
