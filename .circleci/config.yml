@@ -88,7 +88,7 @@ jobs:
           command: |
             # Export the secrets into a .env file
             infisical init --project-id=$INFISICAL_PROJECT_ID
-            infisical export --format=env > .env      
+            infisical export > .env
   
 
   lint-phpcs:
