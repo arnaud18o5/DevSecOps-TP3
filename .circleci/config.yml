@@ -175,7 +175,6 @@ jobs:
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
             cd $PRODUCTION_DEPLOY_DIRECTORY
-            echo "Circle CI branch: $CIRCLE_BRANCH"
             git pull origin $CIRCLE_BRANCH
             chmod +x deploy/init_vm.sh
             ./deploy/init_vm.sh
