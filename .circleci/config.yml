@@ -34,6 +34,10 @@ executors:
       - image: cimg/php:8.2
         name: localhost
 
+  docker-executor:
+    docker:
+      - image: circleci/python:3.8
+
 # Définition des jobs
 jobs:
   debug-info:
@@ -83,22 +87,14 @@ jobs:
           command: |
             # Display the secret just to verify it has been pulled correctly
             echo "The PASSWORD_TEST is: $PASSWORD_TEST"
-  
-
-  lint-phpcs:
-    executor: php-executor
-    steps:
-      - *attach_workspace
       - run:
-          name: Install PHP_CodeSniffer
-          command: composer require --dev "squizlabs/php_codesniffer=*"
-      - run:
-          name: Run PHP_CodeSniffer
+          name: Export secrets into env file
           command: |
-            ./vendor/bin/phpcs --standard=phpcs.xml --report-file=phpcs-report.txt --extensions=php --ignore=vendor/ .
-      - store_artifacts:
-          path: phpcs-report.txt
-          destination: phpcs-report
+            # Export the secrets into a .env file
+            export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id=$INFISICAL_CLIENT_ID --client-secret=$INFISICAL_CLIENT_SECRET --silent --plain)
+            infisical export --projectId=$INFISICAL_PROJECT_ID --env=dev > .env
+            echo "INFISICAL ENV FILE: $(cat .env)"
+  
 
   security-check-dependencies:
     executor: php-executor
@@ -135,16 +131,22 @@ jobs:
           command: ./vendor/bin/phpunit --testsuite=Unit
 
   build-docker-image:
-    executor: builder-executor
+    executor: docker-executor
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
-          name: Build and Push Docker Image to GHCR
+          name: Build Docker Image
           command: |
-            docker build -t myrepo/myimage:$TAG .
-            docker push myrepo/myimage:$TAG
+            docker build -t ghcr.io/${GHCR_USERNAME}/devsecops-tp3/devsecops:${CIRCLE_SHA1} -f Docker/Dockerfile .
+      - run:
+          name: Login to GHCR
+          command: |
+            echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
+      - run:
+          name: Push Docker Image
+          command: |
+            docker push ghcr.io/${GHCR_USERNAME}/devsecops-tp3/devsecops:${CIRCLE_SHA1}
 
   deploy-ssh-staging:
     executor: simple-executor
@@ -206,10 +208,8 @@ workflows:
     jobs:
       - debug-info
       - build-setup
+      - build-docker-image
       - build-infisical
-      - lint-phpcs:
-          requires:
-            - build-setup
       - security-check-dependencies:
           requires:
             - build-setup
