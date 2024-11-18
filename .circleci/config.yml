@@ -34,6 +34,10 @@ executors:
       - image: cimg/php:8.2
         name: localhost
 
+  docker-executor:
+    docker:
+      - image: circleci/python:3.8
+
 # Définition des jobs
 jobs:
   debug-info:
@@ -135,16 +139,22 @@ jobs:
           command: ./vendor/bin/phpunit --testsuite=Unit
 
   build-docker-image:
-    executor: builder-executor
+    executor: docker-executor
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
-          name: Build and Push Docker Image to GHCR
+          name: Build Docker Image
           command: |
-            docker build -t myrepo/myimage:$TAG .
-            docker push myrepo/myimage:$TAG
+            docker build -t ghcr.io/${GHCR_USERNAME}/devsecops-tp3/devsecops:${CIRCLE_SHA1} -f Docker/Dockerfile .
+      - run:
+          name: Login to GHCR
+          command: |
+            echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
+      - run:
+          name: Push Docker Image
+          command: |
+            docker push ghcr.io/${GHCR_USERNAME}/devsecops-tp3/devsecops:${CIRCLE_SHA1}
 
   deploy-ssh-staging:
     executor: simple-executor
@@ -185,6 +195,7 @@ workflows:
     jobs:
       - debug-info
       - build-setup
+      - build-docker-image
       - build-infisical
       - lint-phpcs:
           requires:
