@@ -182,7 +182,7 @@ jobs:
             git pull origin $CIRCLE_BRANCH
             sudo ./deploy/init_vm.sh
             composer install --optimize-autoloader --no-interaction --prefer-dist
-            (flock -w 10 9 || exit 1; sudo -S service php$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")-fpm restart ) 9>/tmp/fpm.lock
+            (flock -w 10 9 || exit 1; sudo -S service php$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)-fpm restart ) 9>/tmp/fpm.lock
             EOF
 
 workflows:
