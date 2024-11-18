@@ -83,6 +83,11 @@ jobs:
           command: |
             # Display the secret just to verify it has been pulled correctly
             echo "The PASSWORD_TEST is: $PASSWORD_TEST"
+      - run:
+          name: Export secrets into env file
+          command: |
+            # Export the secrets into a .env file
+            infisical export --format=env > .env      
   
 
   lint-phpcs:
