@@ -87,6 +87,7 @@ jobs:
           name: Export secrets into env file
           command: |
             # Export the secrets into a .env file
+            infisical init
             infisical export > .env
   
 
