@@ -63,6 +63,7 @@ sudo chmod +x /
 sudo chmod +x /home
 sudo chmod +x /home/ubuntu
 sudo chmod +x /home/ubuntu/prod
+sudo chmod +x /home/ubuntu/prod/public
 sudo chown -R www-data:www-data "$PROJECT_DIR"
 sudo chmod -R 755 "$PROJECT_DIR"
 
