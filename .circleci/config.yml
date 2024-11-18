@@ -180,8 +180,9 @@ jobs:
           command: |
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
-            sudo ./deploy/init_vm.sh
+            [ -d $PRODUCTION_DEPLOY_DIRECTORY_git ] || (git clone https://github.com/arnaud18o5/DevSecOps-TP3.git && mv DevSecOps-TP3/ $PRODUCTION_DEPLOY_DIRECTORY_git)
             cd $PRODUCTION_DEPLOY_DIRECTORY_git
+            sudo ./deploy/init_vm.sh
             git pull origin $CIRCLE_BRANCH
             cd ..
             sudo rm -rf $PRODUCTION_DEPLOY_DIRECTORY
