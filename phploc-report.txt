@@ -1,2 +1,0 @@
-
-Fatal error: Declaration of SebastianBergmann\PHPLOC\CLI\Application::doRun(Symfony\Component\Console\Input\InputInterface $input, Symfony\Component\Console\Output\OutputInterface $output) must be compatible with Symfony\Component\Console\Application::doRun(Symfony\Component\Console\Input\InputInterface $input, Symfony\Component\Console\Output\OutputInterface $output): int in /Users/arnaudavocatgros/Cours/5A/DevSecOps/DevSecOps-TP3/vendor/phploc/phploc/src/CLI/Application.php on line 116
