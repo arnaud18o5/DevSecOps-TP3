@@ -56,30 +56,30 @@ else
 fi
 
 # Configuration du répertoire
-DIRECTORY_CONFIG="<Directory /home/ubuntu/prod/public>
-    Options Indexes FollowSymLinks
-    AllowOverride All
-    Require all granted
-</Directory>"
+# DIRECTORY_CONFIG="<Directory /home/ubuntu/prod/public>
+#     Options Indexes FollowSymLinks
+#     AllowOverride All
+#     Require all granted
+# </Directory>"
 
-# Vérifier si la section <Directory> existe déjà
-if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONFIG_FILE"; then
-    # Ajouter la configuration dans le fichier Apache
-    echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONFIG_FILE" > /dev/null
-    echo "Configuration <Directory /home/ubuntu/prod/public> ajoutée à $APACHE_CONFIG_FILE"
-else
-    echo "La configuration <Directory /home/ubuntu/prod/public> est déjà présente dans $APACHE_CONFIG_FILE"
-fi
+# # Vérifier si la section <Directory> existe déjà
+# if ! grep -q "<Directory /home/ubuntu/prod/public>" "$APACHE_CONFIG_FILE"; then
+#     # Ajouter la configuration dans le fichier Apache
+#     echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONFIG_FILE" > /dev/null
+#     echo "Configuration <Directory /home/ubuntu/prod/public> ajoutée à $APACHE_CONFIG_FILE"
+# else
+#     echo "La configuration <Directory /home/ubuntu/prod/public> est déjà présente dans $APACHE_CONFIG_FILE"
+# fi
 
 # Permissions
 # Suggestion : should move the website to a separate directory
 # and give the ownership to www-data, so that the user personal
 # files are not accessible by the web server.
-sudo chmod +x /
-sudo chmod +x /home
-sudo chmod +x /home/ubuntu
-sudo chmod +x /home/ubuntu/prod
-sudo chmod +x /home/ubuntu/prod/public
+# sudo chmod +x /
+# sudo chmod +x /home
+# sudo chmod +x /home/ubuntu
+# sudo chmod +x /home/ubuntu/prod
+# sudo chmod +x /home/ubuntu/prod/public
 sudo chown -R www-data:www-data /home/ubuntu/prod/public
 sudo chmod -R 755 /home/ubuntu/prod/public
 

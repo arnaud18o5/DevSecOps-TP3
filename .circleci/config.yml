@@ -178,6 +178,7 @@ jobs:
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
             cd $PRODUCTION_DEPLOY_DIRECTORY
+            git reset --hard
             git pull origin $CIRCLE_BRANCH
             chmod +x deploy/init_vm.sh
             sudo ./deploy/init_vm.sh
