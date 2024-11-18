@@ -180,13 +180,13 @@ jobs:
           command: |
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
-            [ -d $PRODUCTION_DEPLOY_DIRECTORY_git ] || (git clone https://github.com/arnaud18o5/DevSecOps-TP3.git && mv DevSecOps-TP3/ $PRODUCTION_DEPLOY_DIRECTORY_git)
-            cd $PRODUCTION_DEPLOY_DIRECTORY_git
+            [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone https://github.com/arnaud18o5/DevSecOps-TP3.git && mv DevSecOps-TP3/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
+            cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
             sudo ./deploy/init_vm.sh
             git pull origin $CIRCLE_BRANCH
             cd ..
             sudo rm -rf $PRODUCTION_DEPLOY_DIRECTORY
-            cp -r $PRODUCTION_DEPLOY_DIRECTORY_git $PRODUCTION_DEPLOY_DIRECTORY
+            cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
             cd $PRODUCTION_DEPLOY_DIRECTORY
             composer install --optimize-autoloader --no-interaction --prefer-dist
             (flock -w 10 9 || exit 1; sudo -S service php8.3-fpm restart ) 9>/tmp/fpm.lock
