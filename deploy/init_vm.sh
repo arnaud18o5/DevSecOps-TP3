@@ -50,14 +50,14 @@ PROJECT_DIR="${USER_HOME}/prod/public"
 APACHE_CONF="/etc/apache2/sites-available/000-default.conf"
 
 if grep -q "DocumentRoot" "$APACHE_CONF"; then
-    sed -i "s|DocumentRoot .*|DocumentRoot $PROJECT_DIR|" "$APACHE_CONF"
+    sudo sed -i "s|DocumentRoot .*|DocumentRoot $PROJECT_DIR|" "$APACHE_CONF"
 else
     echo "DocumentRoot $PROJECT_DIR" >> "$APACHE_CONF"
 fi
 
 # Permissions
-chown -R www-data:www-data "$PROJECT_DIR"
-chmod -R 755 "$PROJECT_DIR"
+sudo chown -R www-data:www-data "$PROJECT_DIR"
+sudo chmod -R 755 "$PROJECT_DIR"
 
 # Redémarrage des services
 sudo systemctl restart php${PHP_VERSION}-fpm
