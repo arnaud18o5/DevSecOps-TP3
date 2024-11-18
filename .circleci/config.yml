@@ -87,7 +87,6 @@ jobs:
           name: Export secrets into env file
           command: |
             # Export the secrets into a .env file
-            infisical init --project-id=$INFISICAL_PROJECT_ID
             infisical export > .env
   
 
