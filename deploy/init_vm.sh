@@ -5,7 +5,7 @@ sudo apt update
 
 # Installer PHP et les extensions nécessaires
 sudo apt install -y php
-sudo apt install -y php-{cli,curl,mbstring,xml,zip,gd}
+sudo apt install -y php-{cli,curl,mbstring,xml,zip,gd,fpm}
 sudo systemctl restart apache2
 
 # Installer Composer si ce n'est pas déjà fait
