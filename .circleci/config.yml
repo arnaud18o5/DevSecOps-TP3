@@ -168,6 +168,7 @@ jobs:
             ssh -o StrictHostKeyChecking=no $STAGING_SSH_USER@$STAGING_SSH_HOST \<< EOF
             [ -d ${STAGING_DEPLOY_DIRECTORY}_git ] || (git clone $GITHUB_REPOSITORY_URL && mv $(basename -s .git $GITHUB_REPOSITORY_URL)/ ${STAGING_DEPLOY_DIRECTORY}_git)
             cd ${STAGING_DEPLOY_DIRECTORY}_git
+            git fetch origin
             git checkout $CIRCLE_BRANCH && git pull
             sudo ./deploy/init_vm.sh $STAGING_DEPLOY_DIRECTORY
             cd ..
@@ -182,10 +183,7 @@ jobs:
       - run:
           name: Upload .env file to Staging
           command: |
-            cat .env
             scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/.env
-            scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/public/.env
-            scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/src/.env
 
   deploy-ssh-production:
     executor: simple-executor
@@ -200,6 +198,7 @@ jobs:
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
             [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone $GITHUB_REPOSITORY_URL && mv $(basename -s .git $GITHUB_REPOSITORY_URL)/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
             cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
+            git fetch origin
             git checkout $CIRCLE_BRANCH && git pull
             sudo ./deploy/init_vm.sh $PRODUCTION_DEPLOY_DIRECTORY
             cd ..
@@ -210,6 +209,11 @@ jobs:
             PHP_FPM_VERSION=\$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
             (flock -w 10 9 || exit 1; sudo -S service php\${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
             EOF
+      - *attach_workspace
+      - run:
+          name: Upload .env file to Production
+          command: |
+            scp -o StrictHostKeyChecking=no .env $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST:$PRODUCTION_DEPLOY_DIRECTORY/.env
 
   analyze-code:
     executor: php-executor
