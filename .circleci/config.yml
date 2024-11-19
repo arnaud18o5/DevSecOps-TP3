@@ -7,6 +7,12 @@ persist_to_workspace: &persist_to_workspace
     paths:
       - .
 
+persist_env_file_to_workspace: &persist_env_file_to_workspace
+  persist_to_workspace:
+    root: .
+    paths:
+      - .env
+
 attach_workspace: &attach_workspace
   attach_workspace:
     at: ~/project
@@ -94,7 +100,7 @@ jobs:
             export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id=$INFISICAL_CLIENT_ID --client-secret=$INFISICAL_CLIENT_SECRET --silent --plain)
             infisical export --projectId=$INFISICAL_PROJECT_ID --env=dev > .env
             echo "INFISICAL ENV FILE: $(cat .env)"
-      - *persist_to_workspace
+      - *persist_env_file_to_workspace
   
 
   security-check-dependencies:
@@ -241,11 +247,11 @@ workflows:
             - build-setup
       - deploy-ssh-staging:
           requires:
-            # - analyze-code
+            # - analyze-code # Commented because it's failing due to the missing .env file when analyzing the code
             - test-phpunit
             - build-infisical
       - deploy-ssh-production:
           requires:
-            # - analyze-code
+            # - analyze-code # Commented because it's failing due to the missing .env file when analyzing the code
             - test-phpunit
             - build-infisical
