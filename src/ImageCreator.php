@@ -22,12 +22,12 @@ class ImageCreator
     protected string $text2;
     protected string $font;
 
-
     public function __construct(
         array  $yourColor = [128, 128, 128],
         array  $yourColor2 = [60, 80, 57],
         string $text = "DEVOPS",
-        string $text2 = "Une superbe image"
+        string $text2 = "Une superbe image",
+        ?string $appSecret = null // Injection de la dépendance
     ) {
         // Création d'une image de 400x200 pixels
         $this->image = imagecreatetruecolor(600, 200);
@@ -39,20 +39,18 @@ class ImageCreator
         $this->text = $text . ' - ' . (new Carbon())->format('Y-m-d H:i:s');
         $this->text2 = $text2;
 
-        if (!empty($_ENV['APP_SECRET'])) {
-            $this->text2 .= ' (secret: ' . $_ENV['APP_SECRET'] . ')';
+        if (!empty($appSecret)) {
+            $this->text2 .= ' (secret: ' . $appSecret . ')';
         }
 
         // La police
         $this->font = dirname(__DIR__) . '/public/font/consolas.ttf';
     }
 
-
     private function allocateColor(array $rgb): false|int
     {
         return imagecolorallocate($this->image, ...$rgb);
     }
-
 
     public function createImage(): void
     {
