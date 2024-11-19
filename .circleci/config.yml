@@ -241,7 +241,6 @@ workflows:
     jobs:
       - debug-info
       - build-setup
-      - build-docker-image
       - build-infisical
       - security-check-dependencies:
           requires:
@@ -252,13 +251,25 @@ workflows:
       - analyze-code:
           requires:
             - build-setup
+      - build-docker-image
       - deploy-ssh-staging:
           requires:
-            # - analyze-code # Commented because it's failing due to the missing .env file when analyzing the code
-            - test-phpunit
             - build-infisical
+            - security-check-dependencies
+            - test-phpunit
+            # - analyze-code # Commented because it's failing due to the missing .env file when analyzing the code
+          filters:
+            branches:
+              only:
+                - /^release\/.*/
       - deploy-ssh-production:
           requires:
-            # - analyze-code # Commented because it's failing due to the missing .env file when analyzing the code
-            - test-phpunit
             - build-infisical
+            - security-check-dependencies
+            - test-phpunit
+            # - analyze-code # Commented because it's failing due to the missing .env file when analyzing the code
+          filters:
+            branches:
+              only:
+                - main
+                - master
