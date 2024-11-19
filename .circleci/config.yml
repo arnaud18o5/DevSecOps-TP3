@@ -180,14 +180,12 @@ jobs:
             cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
             git checkout $CIRCLE_BRANCH && git pull
             sudo ./deploy/init_vm.sh $PRODUCTION_DEPLOY_DIRECTORY
-            TEST_VAR=testtest
-            echo $TEST_VAR
             cd ..
             sudo rm -rf $PRODUCTION_DEPLOY_DIRECTORY
             cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
             cd $PRODUCTION_DEPLOY_DIRECTORY
             composer install --optimize-autoloader --no-interaction --prefer-dist
-            (flock -w 10 9 || exit 1; sudo -S service php8.3-fpm restart ) 9>/tmp/fpm.lock
+            (flock -w 10 9 || exit 1; sudo -S service php$(/usr/bin/php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")-fpm restart ) 9>/tmp/fpm.lock
             EOF
 
 workflows:
