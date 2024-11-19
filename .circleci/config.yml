@@ -154,14 +154,22 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "${STAGING_SSH_FINGERPRINT}"
-      - run:
+      - deploy:
           name: Deploy to Staging
           command: |
+            set -x
             ssh -o StrictHostKeyChecking=no $STAGING_SSH_USER@$STAGING_SSH_HOST \<< EOF
+            [ -d ${STAGING_DEPLOY_DIRECTORY}_git ] || (git clone $GITHUB_REPOSITORY_URL && mv $(basename -s .git $GITHUB_REPOSITORY_URL)/ ${STAGING_DEPLOY_DIRECTORY}_git)
+            cd ${STAGING_DEPLOY_DIRECTORY}_git
+            git checkout $CIRCLE_BRANCH && git pull
+            sudo ./deploy/init_vm.sh $STAGING_DEPLOY_DIRECTORY
+            cd ..
+            sudo rm -rf $STAGING_DEPLOY_DIRECTORY
+            cp -r ${STAGING_DEPLOY_DIRECTORY}_git $STAGING_DEPLOY_DIRECTORY
             cd $STAGING_DEPLOY_DIRECTORY
-            git pull origin $CIRCLE_BRANCH
-            composer install --no-interaction --prefer-dist
-            sudo service php-fpm restart
+            composer install --optimize-autoloader --no-interaction --prefer-dist
+            PHP_FPM_VERSION=\$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
+            (flock -w 10 9 || exit 1; sudo -S service php\${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
             EOF
 
   deploy-ssh-production:
@@ -171,17 +179,22 @@ jobs:
           fingerprints:
             - "${PRODUCTION_SSH_FINGERPRINT}"
       - deploy:
-          name: Deploy to AWS
+          name: Deploy to PRODUCTION
           command: |
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
-            PHP_FPM_VERSION=$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
+            [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone $GITHUB_REPOSITORY_URL && mv $(basename -s .git $GITHUB_REPOSITORY_URL)/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
+            cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
+            git checkout $CIRCLE_BRANCH && git pull
+            sudo ./deploy/init_vm.sh $PRODUCTION_DEPLOY_DIRECTORY
+            cd ..
+            sudo rm -rf $PRODUCTION_DEPLOY_DIRECTORY
+            cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
             cd $PRODUCTION_DEPLOY_DIRECTORY
-            git pull origin $CIRCLE_BRANCH
             composer install --optimize-autoloader --no-interaction --prefer-dist
-            (flock -w 10 9 || exit 1; sudo -S service php${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
+            PHP_FPM_VERSION=\$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
+            (flock -w 10 9 || exit 1; sudo -S service php\${PHP_FPM_VERSION}-fpm restart ) 9>/tmp/fpm.lock
             EOF
-
 
   analyze-code:
     executor: php-executor
@@ -202,6 +215,7 @@ jobs:
       - store_artifacts:
           path: phpmd-report.txt
           destination: phpmd-report
+
 # Configuration des workflows
 workflows:
   main_workflow:
@@ -219,9 +233,11 @@ workflows:
       - analyze-code:
           requires:
             - build-setup
-      # - deploy-ssh-staging:
-      #     requires:
-      #       - test-phpunit
+      - deploy-ssh-staging:
+          requires:
+            - analyze-code
+            - test-phpunit
       - deploy-ssh-production:
           requires:
+            - analyze-code
             - test-phpunit
