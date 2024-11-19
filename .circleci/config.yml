@@ -180,6 +180,8 @@ jobs:
             cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
             git checkout $CIRCLE_BRANCH && git pull
             sudo ./deploy/init_vm.sh $PRODUCTION_DEPLOY_DIRECTORY
+            TEST_VAR=testtest
+            echo $TEST_VAR
             cd ..
             sudo rm -rf $PRODUCTION_DEPLOY_DIRECTORY
             cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
