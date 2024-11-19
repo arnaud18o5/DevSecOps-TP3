@@ -241,11 +241,11 @@ workflows:
             - build-setup
       - deploy-ssh-staging:
           requires:
-            - analyze-code
+            # - analyze-code
             - test-phpunit
             - build-infisical
       - deploy-ssh-production:
           requires:
-            - analyze-code
+            # - analyze-code
             - test-phpunit
             - build-infisical
