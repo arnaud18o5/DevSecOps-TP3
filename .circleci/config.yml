@@ -174,7 +174,7 @@ jobs:
           command: |
             set -x
             ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
-            [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone https://github.com/arnaud18o5/DevSecOps-TP3.git && mv DevSecOps-TP3/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
+            [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone $GITHUB_REPOSITORY_URL && mv $(basename -s .git $GITHUB_REPOSITORY_URL)/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
             cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
             git checkout $CIRCLE_BRANCH && git pull
             sudo ./deploy/init_vm.sh $PRODUCTION_DEPLOY_DIRECTORY
