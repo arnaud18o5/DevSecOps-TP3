@@ -58,6 +58,10 @@ if ! grep -q "<Directory ${DEPLOY_DIRECTORY}/public>" "$APACHE_CONF"; then
     echo "$DIRECTORY_CONFIG" | sudo tee -a "$APACHE_CONF" > /dev/null
 fi
 
+# Permissions
+sudo chown -R www-data:www-data $DEPLOY_DIRECTORY
+sudo chmod -R 755 $DEPLOY_DIRECTORY
+
 # Redémarrage des services
 sudo systemctl restart php${PHP_VERSION}-fpm
 sudo systemctl restart apache2
