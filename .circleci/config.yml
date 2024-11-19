@@ -185,7 +185,7 @@ jobs:
             cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
             cd $PRODUCTION_DEPLOY_DIRECTORY
             composer install --optimize-autoloader --no-interaction --prefer-dist
-            (flock -w 10 9 || exit 1; sudo -S service php$(/usr/bin/php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")-fpm restart ) 9>/tmp/fpm.lock
+            (flock -w 10 9 || exit 1; sudo -S service $(systemctl list-units --type=service --all | grep -oP 'php[0-9.]+-fpm' | head -n 1) restart ) 9>/tmp/fpm.lock
             EOF
 
 workflows:
