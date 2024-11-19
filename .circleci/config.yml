@@ -184,6 +184,8 @@ jobs:
           command: |
             cat .env
             scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/.env
+            scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/public/.env
+            scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/src/.env
 
   deploy-ssh-production:
     executor: simple-executor
