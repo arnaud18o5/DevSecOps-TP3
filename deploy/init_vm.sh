@@ -61,6 +61,7 @@ fi
 # Permissions
 sudo chown -R www-data:www-data $DEPLOY_DIRECTORY
 sudo chmod -R 755 $DEPLOY_DIRECTORY
+sudo chmod 755 $(dirname $DEPLOY_DIRECTORY)
 
 # Redémarrage des services
 sudo systemctl restart php${PHP_VERSION}-fpm
