@@ -21,7 +21,7 @@ if [ ! -f /usr/local/bin/composer ]; then
 
     # Vérifier l'intégrité du script d'installation
     HASH=$(curl -sS https://composer.github.io/installer.sig)
-    if php -r "exit(hash_file('SHA384', 'composer-setup.php') === '$HASH' ? 0 : 1;"; then
+    if php -r "exit(hash_file('SHA384', 'composer-setup.php') === '$HASH' ? 0 : 1);"; then
     echo "Installer verified"
     else
     echo "Installer corrupt"
