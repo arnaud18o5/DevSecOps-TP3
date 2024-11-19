@@ -198,21 +198,21 @@ jobs:
 workflows:
   main_workflow:
     jobs:
-      # - debug-info
-      # - build-setup
-      # - build-infisical
-      # - lint-phpcs:
-      #     requires:
-      #       - build-setup
-      # - security-check-dependencies:
-      #     requires:
-      #       - build-setup
-      # - test-phpunit:
-      #     requires:
-      #       - build-setup
+      - debug-info
+      - build-setup
+      - build-infisical
+      - lint-phpcs:
+          requires:
+            - build-setup
+      - security-check-dependencies:
+          requires:
+            - build-setup
+      - test-phpunit:
+          requires:
+            - build-setup
       - deploy-ssh-staging
-      #     requires:
-      #       - test-phpunit
+          requires:
+            - test-phpunit
       - deploy-ssh-production
-          # requires:
-          #   - test-phpunit
+          requires:
+            - test-phpunit
