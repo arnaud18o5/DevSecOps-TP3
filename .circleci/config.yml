@@ -185,8 +185,8 @@ jobs:
             cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
             cd $PRODUCTION_DEPLOY_DIRECTORY
             composer install --optimize-autoloader --no-interaction --prefer-dist
-            PHP_FPM_VERSION=\\$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
-            (flock -w 10 9 || exit 1; sudo -S service php\\$(PHP_FPM_VERSION)-fpm restart ) 9>/tmp/fpm.lock
+            PHP_FPM_VERSION=\$(php -v | head -n 1 | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
+            (flock -w 10 9 || exit 1; sudo -S service php\$(PHP_FPM_VERSION)-fpm restart ) 9>/tmp/fpm.lock
             EOF
 
 workflows:
