@@ -237,7 +237,7 @@ jobs:
 
 # Configuration des workflows
 workflows:
-  integration_workflow:
+  main_workflow:
     jobs:
       - debug-info
       - build-setup
@@ -251,9 +251,6 @@ workflows:
       - analyze-code:
           requires:
             - build-setup
-  deployment_workflow:
-    jobs:
-      - build-docker-image
       - deploy-ssh-staging:
           requires:
             - build-infisical
@@ -275,3 +272,6 @@ workflows:
               only:
                 - main
                 - master
+  versionning_workflow:
+    jobs:
+      - build-docker-image
