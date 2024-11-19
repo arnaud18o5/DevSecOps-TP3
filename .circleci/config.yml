@@ -175,7 +175,7 @@ jobs:
           name: Deploy to AWS
           command: |
             set -x
-            ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< EOF
+            ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST <<'EOF'
             [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone https://github.com/arnaud18o5/DevSecOps-TP3.git && mv DevSecOps-TP3/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
             cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
             git checkout $CIRCLE_BRANCH && git pull
@@ -184,9 +184,6 @@ jobs:
             sudo rm -rf $PRODUCTION_DEPLOY_DIRECTORY
             cp -r ${PRODUCTION_DEPLOY_DIRECTORY}_git $PRODUCTION_DEPLOY_DIRECTORY
             cd $PRODUCTION_DEPLOY_DIRECTORY
-            whoami
-            whoami
-            whoami
             composer install --optimize-autoloader --no-interaction --prefer-dist
             (flock -w 10 9 || exit 1; sudo -S service $(systemctl list-units --type=service --all | grep -oP 'php[0-9.]+-fpm' | head -n 1) restart ) 9>/tmp/fpm.lock
             EOF
