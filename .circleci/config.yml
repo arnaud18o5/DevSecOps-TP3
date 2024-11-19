@@ -175,7 +175,7 @@ jobs:
           name: Deploy to AWS
           command: |
             set -x
-            ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST <<'EOF'
+            ssh -o StrictHostKeyChecking=no $PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST \<< 'EOF'
             [ -d ${PRODUCTION_DEPLOY_DIRECTORY}_git ] || (git clone https://github.com/arnaud18o5/DevSecOps-TP3.git && mv DevSecOps-TP3/ ${PRODUCTION_DEPLOY_DIRECTORY}_git)
             cd ${PRODUCTION_DEPLOY_DIRECTORY}_git
             git checkout $CIRCLE_BRANCH && git pull
