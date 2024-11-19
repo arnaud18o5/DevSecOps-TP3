@@ -27,13 +27,14 @@ class ImageCreator
         array  $yourColor2 = [60, 80, 57],
         string $text = "DEVOPS",
         string $text2 = "Une superbe image",
-        ?string $appSecret = null // Injection de la dépendance
     ) {
         // Création d'une image de 400x200 pixels
         $this->image = imagecreatetruecolor(600, 200);
         $this->white = $this->allocateColor([255, 255, 255]);
         $this->yourColor = $this->allocateColor($yourColor);
         $this->yourColor2 = $this->allocateColor($yourColor2);
+
+        $appSecret = $_ENV['APP_SECRET'] ?? null;
 
         // Le texte
         $this->text = $text . ' - ' . (new Carbon())->format('Y-m-d H:i:s');
