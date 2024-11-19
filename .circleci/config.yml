@@ -182,8 +182,8 @@ jobs:
       - run:
           name: Upload .env file to Staging
           command: |
-            apt-get update && apt-get install -y rsync
-            rsync -avz -e "ssh -o StrictHostKeyChecking=no" .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/.env
+            cat .env
+            scp -o StrictHostKeyChecking=no .env $STAGING_SSH_USER@$STAGING_SSH_HOST:$STAGING_DEPLOY_DIRECTORY/.env
 
   deploy-ssh-production:
     executor: simple-executor
